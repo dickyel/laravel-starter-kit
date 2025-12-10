@@ -22,6 +22,7 @@ class Menu extends Model
         'route_name',
         'icon',
         'order',
+        'is_active',
     ];
 
     public function roles()

@@ -2,6 +2,8 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/compiled/css/table-datatable-jquery.css') }}">
 @endpush
 
 @section('content')
@@ -34,7 +36,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover" id="table-users">
                         <thead>
                             <tr>
                                 <th>Nama</th>
@@ -45,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($users as $user)
+                            @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->username }}</td>
@@ -70,16 +72,9 @@
                                         @endcan
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Data belum tersedia.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="mt-3">
-                    {{ $users->links('components.pagination') }}
                 </div>
             </div>
         </div>
@@ -88,6 +83,13 @@
 
 @push('scripts')
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table-users').DataTable();
+        });
+    </script>
     <script>
         // Tunggu sampai semua HTML dimuat
         document.addEventListener('DOMContentLoaded', function() {

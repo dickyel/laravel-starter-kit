@@ -21,7 +21,7 @@ class MenuController extends Controller
 
 
         // 2. Ambil semua data menu dengan relasi parent-nya untuk efisiensi
-        $menus = Menu::with('parent')->latest()->paginate(10);
+        $menus = Menu::with('parent')->latest()->get();
 
         // 3. Kirim data ke view
         return view('admin.menu.index', compact('menus'));
@@ -57,6 +57,7 @@ class MenuController extends Controller
             'route_name' => 'nullable|string|max:255|unique:menus,route_name',
             'icon' => 'nullable|string|max:255',
             'order' => 'required|integer',
+            'is_active' => 'boolean',
         ], [
             // Pesan error kustom (opsional, tapi bagus)
             'name.required' => 'Nama menu tidak boleh kosong.',
@@ -114,6 +115,7 @@ class MenuController extends Controller
             'route_name' => 'nullable|string|max:255|unique:menus,route_name,' . $menu->id,
             'icon' => 'nullable|string|max:255',
             'order' => 'required|integer',
+            'is_active' => 'boolean',
         ]);
 
         // 3. Update data di database

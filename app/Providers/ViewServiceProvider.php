@@ -30,7 +30,11 @@ class ViewServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 /** @var \App\Models\User $user */
                 $user = Auth::user();
-                $user->load('roles.menus.children'); // Eager load untuk efisiensi
+                $user->load(['roles.menus' => function ($query) {
+                    $query->where('is_active', true);
+                }, 'roles.menus.children' => function ($query) {
+                    $query->where('is_active', true);
+                }]);
 
                 $menus = $user->roles->flatMap(function ($role) {
                     return $role->menus;

@@ -4,62 +4,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mazer Admin Dashboard</title>
+    <title>Login - School Management System</title>
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
-    <link rel="shortcut icon"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAiCAYAAADRcLDBAAAEs2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjMzIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzQiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSIzMyIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzQiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249Ijk2LjAiCiAgIHRpZmY6WVJlc29sdXRpb249Ijk2LjAiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjItMDMtMzFUMTA6NTA6MjMrMDI6MDAiCiAgIHhtcDpNZXRhZGF0YURhdGU9IjIwMjItMDMtMzFUMTA6NTA6MjMrMDI6MDAiPgogICA8eG1wTU06SGlzdG9yeT4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkKICAgICAgc3RFdnQ6YWN0aW9uPSJwcm9kdWNlZCIKICAgICAgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWZmaW5pdHkgRGVzaWduZXIgMS4xMC4xIgogICAgICBzdEV2dDp3aGVuPSIyMDIyLTAzLTMxVDEwOjUwOjIzKzAyOjAwIi8+CiAgICA8L3JkZjpTZXE+CiAgIDwveG1wTU06SGlzdG9yeT4KICA8L3JkZjpEZXNjcmlwdGlvbj4KIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+Cjw/eHBhY2tldCBlbmQ9InIiPz5V57uAAAABgmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAAKJF1kc8rRFEUxz9maORHo1hYKC9hISNGTWwsRn4VFmOUX5uZZ36oeTOv954kW2WrKLHxa8FfwFZZK0WkZClrYoOe87ypmWTO7dzzud97z+nec8ETzaiaWd4NWtYyIiNhZWZ2TvE946WZSjqoj6mmPjE1HKWkfdxR5sSbgFOr9Ll/rXoxYapQVik8oOqGJTwqPL5i6Q5vCzeo6dii8KlwpyEXFL519LjLLw6nXP5y2IhGBsFTJ6ykijhexGra0ITl5bRqmWU1fx/nJTWJ7PSUxBbxJkwijBBGYYwhBgnRQ7/MIQIE6ZIVJfK7f/MnyUmuKrPOKgZLpEhj0SnqslRPSEyKnpCRYdXp/9++msneoFu9JgwVT7b91ga+LfjetO3PQ9v+PgLvI1xkC/m5A+h7F32zoLXug38dzi4LWnwHzjeg8UGPGbFfySvuSSbh9QRqZ6H+Gqrm3Z7l9zm+h+iafNUV7O5Bu5z3L/wAdthn7QIme0YAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJTSURBVFiF7Zi9axRBGIefEw2IdxFBRQsLWUTBaywSK4ubdSGVIY1Y6HZql8ZKCGIqwX/AYLmCgVQKfiDn7jZeEQMWfsSAHAiKqPiB5mIgELWYOW5vzc3O7niHhT/YZvY37/swM/vOzJbIqVq9uQ04CYwCI8AhYAlYAB4Dc7HnrOSJWcoJcBS4ARzQ2F4BZ2LPmTeNuykHwEWgkQGAet9QfiMZjUSt3hwD7psGTWgs9pwH1hC1enMYeA7sKwDxBqjGnvNdZzKZjqmCAKh+U1kmEwi3IEBbIsugnY5avTkEtIAtFhBrQCX2nLVehqyRqFoCAAwBh3WGLAhbgCRIYYinwLolwLqKUwwi9pxV4KUlxKKKUwxC6ZElRCPLYAJxGfhSEOCz6m8HEXvOB2CyIMSk6m8HoXQTmMkJcA2YNTHm3congOvATo3tE3A29pxbpnFzQSiQPcB55IFmFNgFfEQeahaAGZMpsIJIAZWAHcDX2HN+2cT6r39GxmvC9aPNwH5gO1BOPFuBVWAZue0vA9+A12EgjPadnhCuH1WAE8ivYAQ4ohKaagV4gvxi5oG7YSA2vApsCOH60WngKrA3R9IsvQUuhIGY00K4flQG7gHH/mLytB4C42EgfrQb0mV7us8AAMeBS8mGNMR4nwHamtBB7B4QRNdaS0M8GxDEog7iyoAguvJ0QYSBuAOcAt71Kfl7wA8DcTvZ2KtOlJEr+ByyQtqqhTyHTIeB+ONeqi3brh+VgIN0fohUgWGggizZFTplu12yW8iy/YLOGWMpDMTPXnl+Az9vj2HERYqPAAAAAElFTkSuQmCC"
-        type="image/png">
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/auth.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #5F9C9C;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .login-container {
+            background: #5F9C9C;
+            border: 15px solid #5F9C9C;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        /* Left Side - Illustration */
+        .left-section {
+            background: linear-gradient(135deg, #FFF8DC 0%, #FFEFD5 100%);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #2C3E50;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .main-heading {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2C1A5B;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+        }
+
+        .illustration {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .illustration img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .social-links {
+            font-size: 0.9rem;
+            color: #2C3E50;
+        }
+
+        .social-links a {
+            color: #2C3E50;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #5F9C9C;
+        }
+
+        /* Right Side - Form */
+        .right-section {
+            background: #FAFAFA;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2C1A5B;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-form {
+            background: white;
+            border: 3px solid #2C1A5B;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2C1A5B;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2C1A5B;
+            box-shadow: 0 0 0 3px rgba(44, 26, 91, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-register {
+            background: white;
+            color: #2C1A5B;
+            border: 2px solid #2C1A5B;
+        }
+
+        .btn-register:hover {
+            background: #2C1A5B;
+            color: white;
+        }
+
+        .btn-login {
+            background: #FFD700;
+            color: #2C1A5B;
+            border: 2px solid #FFD700;
+        }
+
+        .btn-login:hover {
+            background: #FFC700;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a {
+            color: #2C1A5B;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #E0E0E0;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .btn-google {
+            width: 100%;
+            background: #4285F4;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-google:hover {
+            background: #357AE8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-section {
+                display: none;
+            }
+
+            .right-section {
+                padding: 2rem;
+            }
+
+            .main-heading {
+                font-size: 2rem;
+            }
+
+            .form-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 1rem;
+            }
+
+            .login-container {
+                border-width: 10px;
+            }
+
+            .right-section {
+                padding: 1.5rem;
+            }
+
+            .login-form {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (min-width: 969px) and (max-width: 1200px) {
+            .main-heading {
+                font-size: 2.5rem;
+            }
+
+            .left-section {
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <script src="{{ asset('assets/static/js/initTheme.js') }}"></script>
-    <div id="auth">
-
-        <div class="row h-100">
-            <div class="col-lg-5 col-12">
-                <div id="auth-left">
-                    <div class="auth-logo">
-                        <a href="index.html"><img src="{{ asset('assets/compiled/svg/logo.svg') }}" alt="Logo"></a>
-                    </div>
-                    <h1 class="auth-title">Laravel Starter Kit</h1>
-                    <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
-                    @error('login')
-                        <div class="alert alert-light-danger color-danger"><i class="bi bi-exclamation-circle"></i> This
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    <form action="{{ route('login') }}" method="POST">
-                        @csrf {{-- 1. Tambahkan CSRF Token --}}
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text"
-                                class="form-control form-control-xl @error('login') is-invalid @enderror"
-                                placeholder="Email" name="login" value="{{ old('login') }}" required>
-                            <div class="form-control-icon">
-                                <i class="bi bi-person"></i>
-                            </div>
-                        </div>
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password"
-                                name="password" required>
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
-                    </form>
-                </div>
+    <div class="login-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div>
+                <p class="tagline">School Management System</p>
+                <h1 class="main-heading">We make it easy research</h1>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right">
-
-                </div>
+            
+            <div class="illustration">
+                <img src="{{ asset('assets/images/login_illustration.png') }}" alt="Research Illustration">
             </div>
+            
+            <!-- <div class="social-links">
+                <a href="#" target="_blank">Facebook</a> | <a href="#" target="_blank">Twitter</a>
+            </div> -->
         </div>
 
+        <!-- Right Section -->
+        <div class="right-section">
+            <h2 class="form-title">Sign in</h2>
+            
+            @error('login')
+                <div class="alert">
+                    <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                </div>
+            @enderror
+
+            <div class="login-form">
+                <form action="{{ route('login') }}" method="POST">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="login" 
+                            class="form-control @error('login') is-invalid @enderror" 
+                            value="{{ old('login') }}" 
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-control" 
+                                required
+                                autocomplete="current-password"
+                            >
+                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <!-- <button type="button" class="btn btn-register" onclick="window.location.href='#'">Register</button> -->
+                        <button type="submit" class="btn btn-login">Login</button>
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                </form>
+
+                <!-- <div class="divider">or</div> -->
+
+                <!-- <button type="button" class="btn-google" onclick="alert('Google Sign-in coming soon!')">
+                    <i class="fab fa-google"></i>
+                    Google Sign in
+                </button> -->
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 
 </html>

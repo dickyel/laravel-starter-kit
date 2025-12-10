@@ -25,7 +25,17 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'password_2',
+        'address',
+        'phone_number',
+        'user_id_number',
+        'signature_photo_path',
     ];
+
+    public function photos()
+    {
+        return $this->hasMany(UserPhoto::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -34,6 +44,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'password_2',
         'remember_token',
     ];
 
@@ -46,12 +57,28 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed', // <-- INI YANG PALING PENTING!
+            'password' => 'hashed',
+            'password_2' => 'hashed',
         ];
     }
 
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user')->withTimestamps();
+    }
+
+    public function classrooms()
+    {
+        return $this->belongsToMany(Classroom::class, 'student_classrooms')
+                    ->withPivot('seat_number', 'is_active')
+                    ->withTimestamps();
+    }
+
+    // Helper untuk mengambil kelas yang sedang aktif
+    public function currentClassroom()
+    {
+        return $this->belongsToMany(Classroom::class, 'student_classrooms')
+                    ->wherePivot('is_active', true)
+                    ->withPivot('seat_number');
     }
 }

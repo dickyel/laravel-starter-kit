@@ -42,11 +42,26 @@ Route::middleware('auth')->group(function () {
 
 
     // -----------------------------------------
-
-    // --- RUTE BARU UNTUK MANAJEMEN Barang ---
+    // -----------------------------------------
+        // --- RUTE BARU UNTUK MANAJEMEN Barang ---
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
     // -----------------------------------------
+
+    // --- RUTE AKADEMIK (SEKOLAH) ---
+    Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
+    Route::resource('classrooms', \App\Http\Controllers\Admin\ClassroomController::class);
+    Route::post('classrooms/{classroom}/enroll', [\App\Http\Controllers\Admin\ClassroomController::class, 'enroll'])->name('classrooms.enroll');
+    Route::delete('classrooms/{classroom}/kick', [\App\Http\Controllers\Admin\ClassroomController::class, 'kick'])->name('classrooms.kick');
+    Route::post('classrooms/{classroom}/assign-seat', [\App\Http\Controllers\Admin\ClassroomController::class, 'assignSeat'])->name('classrooms.assign-seat');
+    Route::post('classrooms/{classroom}/unassign-seat', [\App\Http\Controllers\Admin\ClassroomController::class, 'unassignSeat'])->name('classrooms.unassign-seat');
+    
+    // Jadwal
+    Route::post('classrooms/{classroom}/schedules', [\App\Http\Controllers\Admin\ClassScheduleController::class, 'store'])->name('classrooms.schedules.store');
+    Route::delete('schedules/{schedule}', [\App\Http\Controllers\Admin\ClassScheduleController::class, 'destroy'])->name('schedules.destroy');
+    // -------------------------------
+
+
 
 
     // --- RUTE UNTUK PROFILE ---

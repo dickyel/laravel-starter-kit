@@ -17,7 +17,7 @@ class PermissionController extends Controller
     public function index()
     {
         $this->authorize("permission.view");
-        $permissions = Permission::with('menu')->latest()->paginate(10);
+        $permissions = Permission::with('menu')->latest()->get();
 
         return view('admin.permissions.index', compact('permissions'));
     }

@@ -19,7 +19,7 @@ class RoleController extends Controller
     public function index()
     {
         $this->authorize(('role.view'));
-        $roles = Role::latest()->paginate(10);
+        $roles = Role::latest()->get();
 
 
         return view("admin.roles.index", compact('roles'));
