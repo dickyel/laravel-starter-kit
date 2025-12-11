@@ -97,6 +97,57 @@
                     @endforeach
                 @endif
 
+                <li class="sidebar-title">Lainnya</li>
+
+                {{-- Hardcoded Menus for New Features --}}
+                
+                {{-- Admin / Teacher Features --}}
+
+                <li class="sidebar-item has-sub {{ Route::is('attendance.*') || Route::is('face.*') ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-camera-video"></i>
+                        <span>Absensi Wajah</span>
+                    </a>
+                    <ul class="submenu {{ Route::is('attendance.*') || Route::is('face.*') ? 'active' : '' }}">
+                        {{-- <li class="submenu-item {{ Route::is('attendance.scan') ? 'active' : '' }}">
+                            <a href="{{ route('attendance.scan') }}" class="submenu-link">Scan Absen</a>
+                        </li> --}}
+                        <li class="submenu-item {{ Route::is('attendance.index') ? 'active' : '' }}">
+                            <a href="{{ route('attendance.index') }}" class="submenu-link">Data Absensi</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('face-management.index') ? 'active' : '' }}">
+                            <a href="{{ route('face-management.index') }}" class="submenu-link">Kelola Face Recognition</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('working-hours.*') ? 'active' : '' }}">
+                            <a href="{{ route('working-hours.index') }}" class="submenu-link">Kelola Jam Kerja</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-item {{ Route::is('exams.*') ? 'active' : '' }}">
+                    <a href="{{ route('exams.index') }}" class='sidebar-link'>
+                        <i class="bi bi-journal-text"></i>
+                        <span>Kelola Ujian (LMS)</span>
+                    </a>
+                </li>
+
+
+                {{-- All Users (Register Face) --}}
+                {{-- <li class="sidebar-item {{ Route::is('face.register') ? 'active' : '' }}">
+                    <a href="{{ route('face.register') }}" class='sidebar-link'>
+                        <i class="bi bi-person-bounding-box"></i>
+                        <span>Daftar Wajah</span>
+                    </a>
+                </li> --}}
+                
+                {{-- Student Features --}}
+                <li class="sidebar-item {{ Route::is('student.exams.*') ? 'active' : '' }}">
+                    <a href="{{ route('student.exams.index') }}" class='sidebar-link'>
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Ujian Saya</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-title">Akun</li>
                 <li class="sidebar-item {{ Route::is('profile.edit') ? 'active' : '' }}">
                     <a href="{{ route('profile.edit') }}" class='sidebar-link'>

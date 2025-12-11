@@ -1,71 +1,98 @@
 @extends('layouts.app')
 
 @push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 <style>
+    .seat-grid-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
     .seat-grid {
         display: grid;
-        grid-template-columns: repeat({{ $classroom->grid_columns }}, 1fr);
+        grid-template-columns: repeat({{ $classroom->grid_columns }}, minmax(160px, 1fr));
         gap: 15px;
         margin-top: 20px;
         padding-bottom: 20px;
+        min-width: max-content; /* Ensure grid doesn't squash */
     }
-    .seat-item {
+    .table-container {
         background-color: #fff;
         border: 2px dashed #dce1e9;
-        border-radius: 10px;
-        min-height: 100px;
+        border-radius: 12px;
+        min-height: 110px;
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        padding: 12px 6px 6px 6px;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    .table-container:hover {
+        border-color: #9cb0d1;
+    }
+    .table-label {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        padding: 0 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #888;
+        border-radius: 20px;
+        border: 1px solid #dee2e6;
+        z-index: 2;
+    }
+    .seat-sub-item {
+        flex: 1;
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        position: relative;
         cursor: pointer;
-        transition: all 0.2s ease;
+        position: relative;
+        transition: all 0.2s;
     }
-    .seat-item:hover {
+    .seat-sub-item:hover {
+        background-color: #fff;
         border-color: #435ebe;
-        background-color: #f0f4ff;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
-    .seat-item.filled {
+    .seat-sub-item.filled {
         background-color: #e5f3ff;
-        border: 2px solid #435ebe;
-        border-style: solid;
+        border: 1px solid #435ebe;
     }
-    .seat-number {
+    .seat-sub-number {
         position: absolute;
-        top: 5px;
-        left: 8px;
+        top: 2px;
+        left: 5px;
+        font-size: 0.65rem;
+        color: #adb5bd;
         font-weight: bold;
-        font-size: 0.8rem;
-        color: #888;
     }
-    .student-avatar img {
-        width: 40px;
-        height: 40px;
+    .student-avatar-small img {
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #fff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .student-name {
-        margin-top: 5px;
-        font-size: 0.8rem;
+    .student-name-small {
+        margin-top: 4px;
+        font-size: 0.7rem;
         font-weight: 600;
         text-align: center;
-        line-height: 1.2;
-        padding: 0 5px;
+        line-height: 1.1;
+        padding: 0 2px;
     }
-    /* Responsive Grid */
-    @media (max-width: 992px) {
-        .seat-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-    @media (max-width: 576px) {
-        .seat-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
+
 </style>
 @endpush
 
@@ -75,7 +102,10 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Visualisasi Kelas: {{ $classroom->name }}</h3>
-                <p class="text-subtitle text-muted">Manage denah, anggota kelas, dan jadwal pelajaran.</p>
+                <p class="text-subtitle text-muted">
+                    Wali Kelas: <strong>{{ $classroom->homeroomTeacher ? $classroom->homeroomTeacher->name : '-' }}</strong> | 
+                    Manage denah, anggota kelas, dan jadwal pelajaran.
+                </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -135,23 +165,49 @@
                                 <small><i class="bi bi-arrow-up-circle"></i> Whiteboard / Guru (Depan)</small>
                             </div>
         
-                            <div class="seat-grid">
-                                @php $totalSeats = $classroom->grid_rows * $classroom->grid_columns; @endphp
-                                @for ($i = 1; $i <= $totalSeats; $i++)
-                                    @php
-                                        $studentInSeat = $classroom->students->where('pivot.seat_number', $i)->first();
-                                    @endphp
-                                    <div class="seat-item {{ $studentInSeat ? 'filled' : '' }}" 
-                                         onclick="openSeatModal({{ $i }}, '{{ $studentInSeat ? $studentInSeat->name : '' }}', {{ $studentInSeat ? 'true' : 'false' }})">
-                                        <span class="seat-number">{{ $i }}</span>
-                                        @if ($studentInSeat)
-                                            <div class="student-avatar"><img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar"></div>
-                                            <div class="student-name text-truncate w-100">{{ $studentInSeat->name }}</div>
-                                        @else
-                                            <div class="text-muted opacity-25"><i class="bi bi-plus-lg fs-4"></i></div>
-                                        @endif
-                                    </div>
-                                @endfor
+                            <div class="seat-grid-wrapper">
+                                <div class="seat-grid">
+                                    @php $totalTables = $classroom->grid_rows * $classroom->grid_columns; @endphp
+                                    @for ($t = 1; $t <= $totalTables; $t++)
+                                        <div class="table-container">
+                                            <span class="table-label">Meja {{ $t }}</span>
+                                            
+                                            @php
+                                                // Seat A (Ganjil) & Seat B (Genap)
+                                                $seatA = ($t * 2) - 1;
+                                                $seatB = ($t * 2);
+                                                
+                                                $studentA = $classroom->students->where('pivot.seat_number', $seatA)->first();
+                                                $studentB = $classroom->students->where('pivot.seat_number', $seatB)->first();
+                                            @endphp
+
+                                            <!-- Left Seat -->
+                                            <div class="seat-sub-item {{ $studentA ? 'filled' : '' }}"
+                                                onclick="openSeatModal({{ $seatA }}, '{{ $studentA ? addslashes($studentA->name) : '' }}', {{ $studentA ? 'true' : 'false' }})">
+                                                <span class="seat-sub-number">{{ $seatA }}</span>
+                                                @if ($studentA)
+                                                    <div class="student-avatar-small"><img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar"></div>
+                                                    <div class="student-name-small text-truncate w-100">{{ $studentA->name }}</div>
+                                                @else
+                                                    <div class="text-muted opacity-25"><i class="bi bi-plus"></i></div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Right Seat -->
+                                            <div class="seat-sub-item {{ $studentB ? 'filled' : '' }}"
+                                                onclick="openSeatModal({{ $seatB }}, '{{ $studentB ? addslashes($studentB->name) : '' }}', {{ $studentB ? 'true' : 'false' }})">
+                                                <span class="seat-sub-number">{{ $seatB }}</span>
+                                                @if ($studentB)
+                                                    <div class="student-avatar-small"><img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar"></div>
+                                                    <div class="student-name-small text-truncate w-100">{{ $studentB->name }}</div>
+                                                @else
+                                                    <div class="text-muted opacity-25"><i class="bi bi-plus"></i></div>
+                                                @endif
+                                            </div>
+
+                                        </div>
+                                    @endfor
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -229,7 +285,7 @@
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Hari</label>
-                                    <select name="day" class="form-select @error('day') is-invalid @enderror" required>
+                                    <select name="day" class="form-select select2 @error('day') is-invalid @enderror" required>
                                         @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $day)
                                             <option value="{{ $day }}">{{ $day }}</option>
                                         @endforeach
@@ -237,7 +293,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Mata Pelajaran</label>
-                                    <select name="subject_id" class="form-select @error('subject_id') is-invalid @enderror" required>
+                                    <select name="subject_id" id="subject_select" class="form-select select2 @error('subject_id') is-invalid @enderror" required>
+                                        <option value="" selected disabled>-- Pilih Mapel --</option>
                                         @if($classroom->subjects->count() == 0)
                                             <option disabled>Kelas ini belum punya list mapel.</option>
                                         @else
@@ -249,6 +306,12 @@
                                     <div class="form-text">
                                         <a href="{{ route('classrooms.edit', $classroom) }}">Tambah Mapel ke Kelas ini</a>
                                     </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Guru Pengampu</label>
+                                    <select name="teacher_id" id="teacher_select" class="form-select select2" required disabled>
+                                        <option value="">-- Pilih Mapel Dulu --</option>
+                                    </select>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-6">
@@ -287,7 +350,8 @@
                                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                                         <div>
                                                             <div class="fw-bold text-primary">{{ $sched->subject->name }}</div>
-                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($sched->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($sched->end_time)->format('H:i') }}</small>
+                                                            <div class="small text-dark"><i class="bi bi-person"></i> {{ $sched->teacher->name ?? '-' }}</div>
+                                                            <small class="text-muted"><i class="bi bi-clock"></i> {{ \Carbon\Carbon::parse($sched->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($sched->end_time)->format('H:i') }}</small>
                                                         </div>
                                                         <form action="{{ route('schedules.destroy', $sched) }}" method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
                                                             @csrf
@@ -401,6 +465,15 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+            width: '100%' 
+        });
+    });
+</script>
 <script>
     var seatModal = new bootstrap.Modal(document.getElementById('seatModal'), {});
 
@@ -419,5 +492,40 @@
         }
         seatModal.show();
     }
+
+    // Dynamic Teacher Filter
+    $('#subject_select').on('change', function() {
+        var subjectId = $(this).val();
+        var teacherSelect = $('#teacher_select');
+        
+        // Reset state
+        teacherSelect.html('<option value="">Loading...</option>').prop('disabled', true);
+        
+        if(subjectId) {
+            $.ajax({
+                url: '/api/subjects/' + subjectId + '/teachers',
+                type: 'GET',
+                success: function(data) {
+                    teacherSelect.empty();
+                    teacherSelect.append('<option value="">-- Pilih Guru --</option>');
+                    
+                    if(data.length > 0) {
+                        $.each(data, function(key, value) {
+                            teacherSelect.append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                        teacherSelect.prop('disabled', false);
+                    } else {
+                        teacherSelect.append('<option value="">Tidak ada guru untuk mapel ini</option>');
+                    }
+                    // Trigger update select2 kalau perlu, tapi biasanya otomatis update DOM
+                },
+                error: function() {
+                    teacherSelect.html('<option value="">Gagal memuat guru</option>');
+                }
+            });
+        } else {
+             teacherSelect.html('<option value="">-- Pilih Mapel Dulu --</option>');
+        }
+    });
 </script>
 @endpush

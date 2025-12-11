@@ -20,7 +20,26 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title">Daftar Mata Pelajaran</h4>
-                    <a href="{{ route('subjects.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Mapel</a>
+                    <div>
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('subjects.export.excel') }}">
+                                        <i class="bi bi-file-earmark-spreadsheet me-2"></i> Excel
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('subjects.export.pdf') }}">
+                                        <i class="bi bi-file-earmark-pdf me-2"></i> PDF
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="{{ route('subjects.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Mapel</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

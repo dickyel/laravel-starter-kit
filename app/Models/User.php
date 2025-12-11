@@ -30,6 +30,7 @@ class User extends Authenticatable
         'phone_number',
         'user_id_number',
         'signature_photo_path',
+        'face_descriptor',
     ];
 
     public function photos()
@@ -77,8 +78,13 @@ class User extends Authenticatable
     // Helper untuk mengambil kelas yang sedang aktif
     public function currentClassroom()
     {
-        return $this->belongsToMany(Classroom::class, 'student_classrooms')
-                    ->wherePivot('is_active', true)
-                    ->withPivot('seat_number');
+        return $this->classrooms()->wherePivot('is_active', true)->first();
+    }
+
+    // Relasi untuk Guru ke Mata Pelajaran
+    public function teacherSubjects()
+    {
+        return $this->belongsToMany(Subject::class, 'subject_teacher', 'teacher_id', 'subject_id')
+                    ->withTimestamps();
     }
 }

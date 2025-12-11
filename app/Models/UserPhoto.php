@@ -12,6 +12,7 @@ class UserPhoto extends Model
     protected $fillable = [
         'user_id',
         'photo_path',
+        'face_descriptor',
     ];
 
     public function user()

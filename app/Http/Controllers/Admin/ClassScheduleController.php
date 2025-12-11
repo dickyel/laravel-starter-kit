@@ -13,6 +13,7 @@ class ClassScheduleController extends Controller
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
+            'teacher_id' => 'required|exists:users,id',
             'day' => 'required|string',
             'start_time' => 'required',
             'end_time' => 'required|after:start_time',
@@ -21,6 +22,11 @@ class ClassScheduleController extends Controller
         $classroom->schedules()->create($request->all());
 
         return redirect()->back()->with('success', 'Jadwal berhasil ditambahkan.');
+    }
+
+    public function getTeachersBySubject(\App\Models\Subject $subject)
+    {
+        return response()->json($subject->teachers);
     }
 
     public function destroy(ClassSchedule $schedule)

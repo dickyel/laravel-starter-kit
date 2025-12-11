@@ -396,7 +396,7 @@
                     </div>
 
                     <div class="forgot-password">
-                        <a href="#">Forgot password?</a>
+                        <a href="{{ route('password.request') }}">Forgot password?</a>
                     </div>
                 </form>
 

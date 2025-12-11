@@ -49,9 +49,10 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="grid_rows">Jumlah Baris Kursi</label>
+                                            <label for="grid_rows">Jumlah Baris Meja</label>
                                             <input type="number" id="grid_rows" class="form-control @error('grid_rows') is-invalid @enderror"
                                                 name="grid_rows" placeholder="5" value="{{ old('grid_rows', 5) }}">
+                                            <small class="text-muted">Jumlah meja ke bawah. 1 Meja = 2 Kursi.</small>
                                             @error('grid_rows')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -59,10 +60,27 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="grid_columns">Jumlah Kolom Kursi</label>
+                                            <label for="grid_columns">Jumlah Kolom Meja</label>
                                             <input type="number" id="grid_columns" class="form-control @error('grid_columns') is-invalid @enderror"
                                                 name="grid_columns" placeholder="6" value="{{ old('grid_columns', 6) }}">
+                                            <small class="text-muted">Jumlah meja ke samping. Total Kursi = (Baris x Kolom) x 2.</small>
                                             @error('grid_columns')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="homeroom_teacher_id">Wali Kelas</label>
+                                            <select class="form-select @error('homeroom_teacher_id') is-invalid @enderror" name="homeroom_teacher_id" id="homeroom_teacher_id">
+                                                <option value="">-- Pilih Wali Kelas --</option>
+                                                @foreach($teachers as $teacher)
+                                                    <option value="{{ $teacher->id }}" {{ old('homeroom_teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                                        {{ $teacher->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('homeroom_teacher_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>

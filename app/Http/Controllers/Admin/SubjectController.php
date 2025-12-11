@@ -6,12 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SubjectExport;
+
 class SubjectController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::all();
+        $subjects = Subject::with('teachers')->get(); // eager load
         return view('admin.subjects.index', compact('subjects'));
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new SubjectExport, 'mata-pelajaran.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $subjects = Subject::with('teachers')->get();
+        $pdf = Pdf::loadView('admin.subjects.pdf', compact('subjects'));
+        return $pdf->download('mata-pelajaran.pdf');
     }
 
     public function create()
