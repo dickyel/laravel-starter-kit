@@ -100,10 +100,40 @@
                 <li class="sidebar-title">Lainnya</li>
 
                 {{-- Hardcoded Menus for New Features --}}
-                
-                {{-- Admin / Teacher Features --}}
 
-                <li class="sidebar-item has-sub {{ Route::is('attendance.*') || Route::is('face.*') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('recruitment.*') ? 'active' : '' }}">
+                    <a href="{{ route('recruitment.index') }}" class='sidebar-link'>
+                        <i class="bi bi-person-plus-fill"></i>
+                        <span>Rekrutmen Siswa</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item {{ request()->routeIs('news.*') ? 'active' : '' }}">
+                    <a href="{{ route('news.index') }}" class='sidebar-link'>
+                        <i class="bi bi-newspaper"></i>
+                        <span>Management Berita</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item has-sub {{ request()->routeIs('books.*') || request()->routeIs('uniforms.*') || request()->routeIs('orders.*') ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-cart4"></i>
+                        <span>Pembelian Sekolah</span>
+                    </a>
+                    <ul class="submenu {{ request()->routeIs('books.*') || request()->routeIs('uniforms.*') || request()->routeIs('orders.*') ? 'active' : '' }}">
+                         <li class="submenu-item {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+                            <a href="{{ route('orders.index') }}" class="submenu-link">Transaksi Penjualan</a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('books.*') ? 'active' : '' }}">
+                            <a href="{{ route('books.index') }}" class="submenu-link">Data Buku</a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('uniforms.*') ? 'active' : '' }}">
+                            <a href="{{ route('uniforms.index') }}" class="submenu-link">Data Seragam</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-item {{ request()->routeIs('teacher.my-teacher.index') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-camera-video"></i>
                         <span>Absensi Wajah</span>
@@ -130,6 +160,20 @@
                         <span>Kelola Ujian (LMS)</span>
                     </a>
                 </li>
+                
+                <li class="sidebar-item {{ Route::is('my-homeroom.index') ? 'active' : '' }}">
+                    <a href="{{ route('my-homeroom.index') }}" class='sidebar-link'>
+                        <i class="bi bi-person-workspace"></i>
+                        <span>My Wali Kelas</span>
+                    </a>
+                </li>
+                
+                <li class="sidebar-item {{ Route::is('my-teacher.index') ? 'active' : '' }}">
+                    <a href="{{ route('my-teacher.index') }}" class='sidebar-link'>
+                        <i class="bi bi-person-video3"></i>
+                        <span>My Teacher</span>
+                    </a>
+                </li>
 
 
                 {{-- All Users (Register Face) --}}
@@ -147,6 +191,15 @@
                         <span>Ujian Saya</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item {{ Route::is('my-student.index') ? 'active' : '' }}">
+                    <a href="{{ route('my-student.index') }}" class='sidebar-link'>
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>My Student</span>
+                    </a>
+                </li>
+
+
 
                 <li class="sidebar-title">Akun</li>
                 <li class="sidebar-item {{ Route::is('profile.edit') ? 'active' : '' }}">

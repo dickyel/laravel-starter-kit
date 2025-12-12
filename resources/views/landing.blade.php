@@ -231,6 +231,16 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
+                    <li class="nav-item me-2">
+                        <a href="{{ route('register-student') }}" class="btn btn-outline-light rounded-pill fw-bold" style="border-width: 2px;">
+                            <i class="fas fa-user-plus me-2"></i>Recruitment
+                        </a>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a href="{{ route('attendance.kiosk') }}" class="btn btn-outline-light rounded-pill fw-bold" style="border-width: 2px;">
+                            <i class="fas fa-camera me-2"></i>Absensi Wajah
+                        </a>
+                    </li>
                     <li class="nav-item">
                         @auth
                             <a href="{{ route('dashboard') }}" class="btn btn-nav-login">Dashboard <i class="fas fa-arrow-right ms-1"></i></a>
@@ -255,12 +265,20 @@
                     <h1 class="hero-title">Sistem Sekolah <br>Terintegrasi & Modern</h1>
                     <p class="hero-subtitle">Kelola absensi wajah, akademik, ujian online, dan laporan sekolah dalam satu platform yang mudah digunakan.</p>
                     
-                    <div class="d-flex gap-3">
+                    <div class="d-flex gap-3 flex-wrap">
                         @auth
                             <a href="{{ route('dashboard') }}" class="btn btn-lg btn-nav-login px-4 py-3 shadow">Akses Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="btn btn-lg btn-nav-login px-4 py-3 shadow">Mulai Sekarang</a>
                         @endauth
+                        <a href="{{ route('attendance.kiosk') }}" class="btn btn-lg px-4 py-3 shadow rounded-pill text-white" style="background-color: var(--primary);">
+                            <i class="fas fa-camera me-2"></i>Absensi Wajah
+                        </a>
+                        @guest
+                             <a href="{{ route('register-student') }}" class="btn btn-lg px-4 py-3 shadow rounded-pill text-white" style="background-color: var(--secondary); color: var(--dark-text) !important;">
+                                <i class="fas fa-user-plus me-2"></i>Recruitment Siswa Baru
+                            </a>
+                        @endguest
                         <a href="#features" class="btn btn-lg btn-outline-dark px-4 py-3 rounded-pill">Pelajari Fitur</a>
                     </div>
                 </div>
@@ -271,6 +289,38 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title mb-5">Berita Terkini</h2>
+            @if(isset($latestNews) && $latestNews->count() > 0)
+                <div class="row g-4">
+                    @foreach($latestNews as $news)
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                @if($news->thumbnail)
+                                    <img src="{{ asset('storage/' . $news->thumbnail) }}" class="card-img-top" alt="{{ $news->title }}" style="height: 200px; object-fit: cover;">
+                                @else
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-newspaper fa-3x"></i>
+                                    </div>
+                                @endif
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">{{ $news->title }}</h5>
+                                    <p class="card-text text-muted small mb-2"><i class="far fa-clock me-1"></i> {{ $news->created_at->format('d M Y') }}</p>
+                                    <p class="card-text">{!! Str::limit(strip_tags($news->content), 100) !!}</p>
+                                    <a href="#" class="btn btn-primary btn-sm rounded-pill px-3">Baca Selengkapnya</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-center text-muted">Belum ada berita terbaru.</p>
+            @endif
         </div>
     </section>
 

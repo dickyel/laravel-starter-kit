@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('class_schedules', function (Blueprint $table) {
-            $table->foreignId('teacher_id')->nullable()->constrained('users')->onDelete('set null');
-        });
+        if (!Schema::hasColumn('class_schedules', 'teacher_id')) {
+            Schema::table('class_schedules', function (Blueprint $table) {
+                $table->foreignId('teacher_id')->nullable()->constrained('users')->onDelete('set null');
+            });
+        }
     }
 
     /**

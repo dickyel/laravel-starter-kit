@@ -13,135 +13,84 @@
             <div class="card-body">
                 <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="mb-3">Informasi Dasar</h5>
-                            <div class="form-group">
-                                <label for="name">Nama Lengkap</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    id="name" name="name" value="{{ old('name') }}" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                    id="username" name="username" value="{{ old('username') }}" required>
-                                @error('username')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    id="email" name="email" value="{{ old('email') }}" required>
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="user_id_number">ID User (Nomor Induk)</label>
-                                <input type="text" class="form-control @error('user_id_number') is-invalid @enderror"
-                                    id="user_id_number" name="user_id_number" value="{{ old('user_id_number') }}">
-                                @error('user_id_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="mb-3">Keamanan & Role</h5>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    id="password" name="password" required>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="password_confirmation">Konfirmasi Password</label>
-                                <input type="password" class="form-control" id="password_confirmation"
-                                    name="password_confirmation" required>
+                    <div id="users-container">
+                        <div class="user-entry border p-3 mb-3 rounded position-relative">
+                            <h5 class="mb-3">User #1</h5>
+                            <!-- Delete Button (Hidden for first item) -->
+                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-3 btn-remove-user" style="display: none;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="mb-2 text-primary">Informasi Dasar</h6>
+                                    <div class="form-group">
+                                        <label>Nama Lengkap</label>
+                                        <input type="text" class="form-control" name="users[0][name]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control" name="users[0][username]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" name="users[0][email]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ID User (Nomor Induk)</label>
+                                        <input type="text" class="form-control" name="users[0][user_id_number]">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-2 text-primary">Keamanan & Role</h6>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" class="form-control" name="users[0][password]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Konfirmasi Password</label>
+                                        <input type="password" class="form-control" name="users[0][password_confirmation]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select class="form-select" name="users[0][roles][]" multiple required>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <hr> <!-- Divider -->
-
-                            <div class="form-group">
-                                <label for="password_2">Password Cadangan (Opsional)</label>
-                                <input type="password" class="form-control @error('password_2') is-invalid @enderror"
-                                    id="password_2" name="password_2">
-                                <small class="text-muted">Password alternatif untuk login.</small>
-                                @error('password_2')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="password_2_confirmation">Konfirmasi Password Cadangan</label>
-                                <input type="password" class="form-control" id="password_2_confirmation"
-                                    name="password_2_confirmation">
-                            </div>
-                            <div class="form-group">
-                                <label for="roles">Role</label>
-                                <select class="choices form-select @error('roles') is-invalid @enderror" id="roles"
-                                    name="roles[]" multiple> <!-- Added multiple -->
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('roles')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="mb-2 text-primary">Kontak</h6>
+                                    <div class="form-group">
+                                        <label>Alamat</label>
+                                        <textarea class="form-control" name="users[0][address]" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nomor Telepon</label>
+                                        <input type="text" class="form-control" name="users[0][phone_number]">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-2 text-primary">File</h6>
+                                    <div class="form-group">
+                                        <label>Foto Profil (Opsional)</label>
+                                        <input type="file" class="form-control" name="users[0][profile_photos][]" multiple>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <h5 class="mb-3">Kontak & File</h5>
-                            <div class="row">
-                                <div class="col-md-6">
-                                     <div class="form-group">
-                                        <label for="address">Alamat</label>
-                                        <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="3">{{ old('address') }}</textarea>
-                                        @error('address')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="phone_number">Nomor Telepon</label>
-                                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror"
-                                            id="phone_number" name="phone_number" value="{{ old('phone_number') }}">
-                                        @error('phone_number')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="signature_photo">Foto Tanda Tangan (Opsional)</label>
-                                        <input type="file" class="form-control @error('signature_photo') is-invalid @enderror"
-                                            id="signature_photo" name="signature_photo">
-                                        @error('signature_photo')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="profile_photos">Foto Profil (Bisa Banyak)</label>
-                                        <div id="file-input-wrapper">
-                                            <input type="file" class="form-control mb-2 @error('profile_photos') is-invalid @enderror"
-                                                name="profile_photos[]" multiple>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-secondary mt-1" id="add-photo-btn">
-                                            <i class="bi bi-plus"></i> Tambah Foto Lain
-                                        </button>
-                                        @error('profile_photos')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-success" id="btn-add-user">
+                            <i class="bi bi-plus-circle"></i> Tambah User Lain
+                        </button>
                     </div>
 
                     <div class="mt-4">
@@ -158,21 +107,42 @@
     <script src="{{ asset('assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const choices = document.querySelectorAll('.choices');
-                new Choices(choices[i], {
-                    removeItemButton: true
-                });
-            }
+            let userCount = 1;
 
-            // Dynamic File Input
-            document.getElementById('add-photo-btn').addEventListener('click', function() {
-                var wrapper = document.getElementById('file-input-wrapper');
-                var input = document.createElement('input');
-                input.type = 'file';
-                input.name = 'profile_photos[]'; // Array name important
-                input.className = 'form-control mb-2';
-                input.multiple = true;
-                wrapper.appendChild(input);
+            document.getElementById('btn-add-user').addEventListener('click', function() {
+                const container = document.getElementById('users-container');
+                const template = container.firstElementChild.cloneNode(true);
+                
+                // Update Title
+                template.querySelector('h5').innerText = 'User #' + (userCount + 1);
+                
+                // Show delete button
+                template.querySelector('.btn-remove-user').style.display = 'block';
+
+                // Update Input Names and Clear Values
+                const inputs = template.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.name) {
+                        input.name = input.name.replace(/\[\d+\]/, `[${userCount}]`);
+                    }
+                    if (input.type !== 'checkbox' && input.type !== 'radio') {
+                        input.value = '';
+                    }
+                });
+
+                container.appendChild(template);
+                userCount++;
+                
+                // Scroll to new element
+                template.scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Delegate event for removal
+            document.getElementById('users-container').addEventListener('click', function(e) {
+                if (e.target.closest('.btn-remove-user')) {
+                    e.target.closest('.user-entry').remove();
+                    // Optional: Re-number headers? For now, we leave them or could re-loop to fix numbers.
+                }
             });
         });
     </script>

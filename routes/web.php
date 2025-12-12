@@ -15,7 +15,8 @@ use App\Http\Controllers\Admin\ActivityLogController;
 
 
 Route::get('/', function () {
-    return view('landing');
+    $latestNews = \App\Models\News::where('is_published', true)->latest()->take(3)->get();
+    return view('landing', compact('latestNews'));
 })->name('landing');
 
 
@@ -39,9 +40,7 @@ Route::post('/api/attendance-kiosk/check-in', [\App\Http\Controllers\Admin\Atten
 
 // Grup untuk Rute yang Membutuhkan Autentikasi
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
 
     // --- RUTE BARU UNTUK MANAJEMEN AKSES ---
@@ -113,8 +112,42 @@ Route::middleware('auth')->group(function () {
     Route::get('my-exams/{exam}/take', [\App\Http\Controllers\Admin\ExamController::class, 'takeExam'])->name('student.exams.take');
     Route::post('my-exams/{exam}/submit', [\App\Http\Controllers\Admin\ExamController::class, 'submitExam'])->name('student.exams.submit');
 
+    // --- RUTE MY STUDENT (Rangkuman Absen & Nilai) ---
+    Route::get('my-student', [\App\Http\Controllers\MyStudentController::class, 'index'])->name('my-student.index');
 
+    // --- RUTE MY WALI KELAS ---
+    Route::get('my-homeroom', [\App\Http\Controllers\MyHomeroomController::class, 'index'])->name('my-homeroom.index');
 
+    // --- RUTE MY TEACHER (Guru Biasa) ---
+    Route::get('my-teacher', [\App\Http\Controllers\MyTeacherController::class, 'index'])->name('my-teacher.index');
+
+    // --- RUTE ADMIN RECRUITMENT ---
+    Route::get('recruitment', [\App\Http\Controllers\RecruitmentController::class, 'index'])->name('recruitment.index'); // List
+    Route::get('recruitment/create', [\App\Http\Controllers\RecruitmentController::class, 'create'])->name('recruitment.create'); // Create Internal
+    Route::post('recruitment', [\App\Http\Controllers\RecruitmentController::class, 'store'])->name('recruitment.store'); // Store Internal
+    Route::put('recruitment/{user}', [\App\Http\Controllers\RecruitmentController::class, 'update'])->name('recruitment.update'); // Update Status
+    Route::get('recruitment/export/excel', [\App\Http\Controllers\RecruitmentController::class, 'exportExcel'])->name('recruitment.export.excel');
+    Route::get('recruitment/export/pdf', [\App\Http\Controllers\RecruitmentController::class, 'exportPdf'])->name('recruitment.export.pdf');
+
+    // News Route
+    Route::get('news/export/excel', [\App\Http\Controllers\Admin\NewsController::class, 'exportExcel'])->name('news.export.excel');
+    Route::get('news/export/pdf', [\App\Http\Controllers\Admin\NewsController::class, 'exportPdf'])->name('news.export.pdf');
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+
+    // --- PURCHASE ROUTES ---
+    // Buku
+    Route::get('books/export/excel', [\App\Http\Controllers\Admin\BookController::class, 'exportExcel'])->name('books.export.excel');
+    Route::get('books/export/pdf', [\App\Http\Controllers\Admin\BookController::class, 'exportPdf'])->name('books.export.pdf');
+    Route::resource('books', \App\Http\Controllers\Admin\BookController::class);
+    
+    // Seragam
+    Route::get('uniforms/export/excel', [\App\Http\Controllers\Admin\UniformController::class, 'exportExcel'])->name('uniforms.export.excel');
+    Route::get('uniforms/export/pdf', [\App\Http\Controllers\Admin\UniformController::class, 'exportPdf'])->name('uniforms.export.pdf');
+    Route::resource('uniforms', \App\Http\Controllers\Admin\UniformController::class);
+    
+    // --- ADMIN PURCHASE ORDER ---
+    Route::get('orders/{order}/print', [\App\Http\Controllers\Admin\OrderController::class, 'printInvoice'])->name('orders.print');
+    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
 
     // --- RUTE UNTUK PROFILE ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -125,3 +158,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
+
+// --- RUTE PUBLIC RECRUITMENT (Outside Auth) ---
+Route::get('register-student', [\App\Http\Controllers\RecruitmentController::class, 'createPublic'])->name('register-student');
+Route::post('register-student', [\App\Http\Controllers\RecruitmentController::class, 'storePublic'])->name('register-student.store');
